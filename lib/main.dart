@@ -19,13 +19,16 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '강남스팟',
-      theme: ThemeData.dark(),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xff0E0D0D)),
       builder: (context, child) {
         return ScrollConfiguration(behavior: _AppBehavior(), child: child!);
       },
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('강남스팟'),
+          title: const Text(
+            '강남스팟',
+            style: TextStyle(color: Colors.white),
+          ),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(

@@ -55,99 +55,98 @@ class DashChatScreenState extends State<DashChatScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: _channel == null
-          ? const Text("Loading...")
-          : Container(
-              color: const Color(0xff0E0D0D),
-              child: DashChat(
-                messages: asDashChatMessages(_messages),
-                currentUser: asDashChatUser(SendbirdSdk().currentUser!),
-                onSend: (newMessage) {},
-                messageOptions: MessageOptions(
-                    currentUserTextColor: Colors.white,
-                    currentUserContainerColor: Colors.amber,
-                    showOtherUsersAvatar: true,
-                    showOtherUsersName: true,
-                    showTime: false,
-                    showCurrentUserAvatar: false,
-                    messageDecorationBuilder: (message, previousMessage,
-                            nextMessage) =>
-                        BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: isCurrentUser
-                                  ? [
-                                      const Color(0xffFF006B),
-                                      const Color(0xffFF4593)
-                                    ]
-                                  : [
-                                      const Color(0xff1A1A1A),
-                                      const Color(0xff1A1A1A)
-                                    ],
-                            ),
-                            borderRadius: BorderRadius.only(
-                                topLeft: isCurrentUser
-                                    ? const Radius.circular(18.0)
-                                    : const Radius.circular(4.0),
-                                bottomLeft: isCurrentUser
-                                    ? const Radius.circular(18.0)
-                                    : const Radius.circular(16.0),
-                                topRight: isCurrentUser
-                                    ? const Radius.circular(4.0)
-                                    : const Radius.circular(18.0),
-                                bottomRight: isCurrentUser
-                                    ? const Radius.circular(16.0)
-                                    : const Radius.circular(18.0))),
-                    textColor: Colors.white,
-                    borderRadius: 10.0),
-                inputOptions: InputOptions(
-                  onTextChange: (value) {
-                    setState(() {
-                      _message = value;
-                    });
-                  },
-                  textController: _textController,
-                  alwaysShowSend: false,
-                  sendButtonBuilder: (builder) => Container(),
-                  showTraillingBeforeSend: false,
-                  leading: [
-                    SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.add,
-                          color: Color(0xfff5f5f5),
-                          size: 24.0,
-                        ),
-                        onPressed: () {},
+          ? const Text(
+              "Loading...",
+              style: TextStyle(color: Colors.white),
+            )
+          : DashChat(
+              messages: asDashChatMessages(_messages),
+              currentUser: asDashChatUser(SendbirdSdk().currentUser!),
+              onSend: (newMessage) {},
+              messageOptions: MessageOptions(
+                  currentUserTextColor: Colors.white,
+                  showOtherUsersAvatar: true,
+                  showOtherUsersName: true,
+                  showTime: false,
+                  showCurrentUserAvatar: false,
+                  messageDecorationBuilder:
+                      (message, previousMessage, nextMessage) => BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: isCurrentUser
+                                ? [
+                                    const Color(0xffFF006B),
+                                    const Color(0xffFF4593)
+                                  ]
+                                : [
+                                    const Color(0xff1A1A1A),
+                                    const Color(0xff1A1A1A)
+                                  ],
+                          ),
+                          borderRadius: BorderRadius.only(
+                              topLeft: isCurrentUser
+                                  ? const Radius.circular(18.0)
+                                  : const Radius.circular(4.0),
+                              bottomLeft: isCurrentUser
+                                  ? const Radius.circular(18.0)
+                                  : const Radius.circular(16.0),
+                              topRight: isCurrentUser
+                                  ? const Radius.circular(4.0)
+                                  : const Radius.circular(18.0),
+                              bottomRight: isCurrentUser
+                                  ? const Radius.circular(16.0)
+                                  : const Radius.circular(18.0))),
+                  textColor: Colors.white,
+                  borderRadius: 10.0),
+              inputOptions: InputOptions(
+                onTextChange: (value) {
+                  setState(() {
+                    _message = value;
+                  });
+                },
+                inputTextStyle: const TextStyle(color: Colors.white),
+                textController: _textController,
+                alwaysShowSend: false,
+                sendButtonBuilder: (builder) => Container(),
+                showTraillingBeforeSend: false,
+                leading: [
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.add,
+                        color: Color(0xfff5f5f5),
+                        size: 24.0,
                       ),
-                    )
-                  ],
-                  inputDecoration: InputDecoration(
-                      hintText: '안녕하세요...',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: const BorderSide(color: Colors.white)),
-                      filled: true,
-                      fillColor: const Color(0xfF323232),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 0.0),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            _textController.clear();
+                      onPressed: () {},
+                    ),
+                  )
+                ],
+                inputDecoration: InputDecoration(
+                    hintText: '안녕하세요...',
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: const BorderSide(color: Colors.white)),
+                    filled: true,
+                    fillColor: const Color(0xfF323232),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 0.0),
+                    suffixIcon: IconButton(
+                        onPressed: () {
+                          final sentMessage =
+                              _channel?.sendUserMessageWithText(_message!);
+                          setState(() {
+                            _messages.add(sentMessage!);
                             _message = '';
-
-                            final sentMessage =
-                                _channel?.sendUserMessageWithText(_message!);
-                            setState(() {
-                              _messages.add(sentMessage!);
-                              _message = '';
-                            });
-                          },
-                          icon: Image.asset('assets/chat_send.png',
-                              width: 24, height: 24))),
-                ),
+                          });
+                          _textController.clear();
+                          _message = '';
+                        },
+                        icon: Image.asset('assets/chat_send.png',
+                            width: 24, height: 24))),
               ),
             ),
     );
@@ -194,9 +193,10 @@ class DashChatScreenState extends State<DashChatScreen>
     try {
       await connectWithSendbird(appId, userId);
 
-      final channel = await GroupChannel.getChannel(
-          'https://api-BC823AD1-FBEA-4F08-8F41-CF0D9D280FBF.sendbird.com/sendbird_open_channel_14092_bf4075fbb8f12dc0df3ccc5c653f027186ac9211');
-
+      final channel = await getChannelBetween(userId, otherUserIds);
+      // final channel = await GroupChannel.getChannel(
+      //     'sendbird_open_channel_14092_bf4075fbb8f12dc0df3ccc5c653f027186ac9211');
+      // print(channel);
       final messages = await channel.getMessagesByTimestamp(
         DateTime.now().millisecondsSinceEpoch * 1000,
         MessageListParams(),
@@ -219,6 +219,25 @@ class DashChatScreenState extends State<DashChatScreen>
       final sendbird = SendbirdSdk(appId: appId);
       final user = await sendbird.connect(userId);
       return user;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<GroupChannel> getChannelBetween(
+    String currentUserId,
+    List<String> otherUserIds,
+  ) async {
+    try {
+      final query = GroupChannelListQuery()
+        ..userIdsExactlyIn = otherUserIds
+        ..limit = 1;
+      final channels = await query.loadNext();
+      if (channels.length == 0) {
+        return GroupChannel.createChannel(
+            GroupChannelParams()..userIds = [currentUserId] + otherUserIds);
+      }
+      return channels[0];
     } catch (e) {
       throw e;
     }
